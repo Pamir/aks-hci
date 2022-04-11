@@ -33,11 +33,11 @@ This is where you can find tutorials on the demos that were in the Ignite 2022 s
    2. MetaLB LoadBalancing
    3. Packet Tracing
 10. Storge
-   1. StorageClass
-   2. CSI - Container Storage Interface
-   3. CAS - Container Attached Storage
-   4. NFS
-   5. SMB
+    1. StorageClass
+    2. CSI - Container Storage Interface
+    3. CAS - Container Attached Storage
+    4. NFS
+    5. SMB
 11. Enabling Azure Arc For Kubernetes
 12. Container insights tutorial: Please visit the `Azure Monitor AKS HCI` file.
     1. Extending Azure Monitor for Containers

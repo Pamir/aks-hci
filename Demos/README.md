@@ -33,19 +33,19 @@ This is where you can find tutorials on the demos that were in the Ignite 2022 s
    5. SMB
 10. Enabling Azure Arc For Kubernetes
 11. Container insights tutorial: Please visit the `Azure Monitor AKS HCI` file.
-   1. Extending Azure Monitor for Containers
-12.[Arc Gitops tutorial](https://azurearcjumpstart.io/azure_arc_jumpstart/azure_arc_k8s/day2/aks_stack_hci/aks_hci_gitops_basic/)
-   1. Gitops Integration
-   2. Cluster Config Syncing 
+    1. Extending Azure Monitor for Containers
+12. [Arc Gitops tutorial](https://azurearcjumpstart.io/azure_arc_jumpstart/azure_arc_k8s/day2/aks_stack_hci/aks_hci_gitops_basic/)
+    1. Gitops Integration
+    2. Cluster Config Syncing 
 13. Container Security
-   1. Azure Policy for Kubernetes
-   2. Extending Azure Policy for Kubernetes
-   3. Container Image Security
-   4. Container Runtime Security and Azure Defender for Kubernetes
-   5. GSMA
-   6. Azure AD Integrated AKS Cluster
-   7. KeyVault Integration
-   8. etcd Secret Encryption
+    1. Azure Policy for Kubernetes
+    2. Extending Azure Policy for Kubernetes
+    3. Container Image Security
+    4. Container Runtime Security and Azure Defender for Kubernetes
+    5. GSMA
+    6. Azure AD Integrated AKS Cluster
+    7. KeyVault Integration
+    8. etcd Secret Encryption
 
    
   

@@ -6,24 +6,26 @@ This is where you can find tutorials on the demos that were in the Ignite 2022 s
 
 ### AKS-HCI Administration
 1. AKS-HCI Building Blocks
-   1. Architecture
-   2. Installation
+   1. [Architecture](https://learn.microsoft.com/en-us/azure/aks/hybrid/kubernetes-concepts)
+   2. [Installation](https://learn.microsoft.com/en-us/azure/aks/hybrid/aks-hci-evaluation-guide-2b)
 2. Creating Target Cluster
-   1. Linux Nodes 
-   2. Windows Nodes
-   3. Scaling Nodes
-   4. NodePools
+   1. [Linux Nodes](https://learn.microsoft.com/en-us/azure/aks/hybrid/use-node-pools) 
+   2. [Windows Nodes](https://learn.microsoft.com/en-us/azure/aks/hybrid/use-node-pools#add-a-node-pool)
+   3. [Scaling AKS Cluster](https://learn.microsoft.com/en-us/azure/aks/hybrid/scale-cluster)
+   4. [Cluster AutoScaler](https://learn.microsoft.com/en-us/azure/aks/hybrid/work-with-horizontal-autoscaler)
+   5. NodePools
 3. Kubernetes Workloads
-   1. Pod
-   2. Deployment
-   3. ReplicaSet
-   4. StatefulSet
-   5. Operator Framework
+   1. [Pod](https://github.com/Pamir/kubernetes-essentials/tree/master/01-pods)
+   2. [Deployment](https://github.com/Pamir/kubernetes-essentials/tree/master/02-deployments)
+   3. [ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
+   4. [StatefulSet](https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/)
+   5. [Operator Framework](https://operatorframework.io/)
    6. Best Practices for Kubernetes Workloads 
 5. Upgrade scenarios:
-   1. Windows Admin Center: https://docs.microsoft.com/en-us/azure-stack/aks-hci/update-akshci-host-windows-admin-center
-   2. PowerShell: https://docs.microsoft.com/en-us/azure-stack/aks-hci/update-akshci-host-powershell
-6. Connecting to AKS-HCI Nodes and troubleshooting
+   1. [Windows Admin Center](https://docs.microsoft.com/en-us/azure-stack/aks-hci/update-akshci-host-windows-admin-center)
+   2. [PowerShell](https://docs.microsoft.com/en-us/azure-stack/aks-hci/update-akshci-host-powershell)
+   3. [Offline Upgrade](https://learn.microsoft.com/en-us/azure/aks/hybrid/offline-download)
+6. [Connecting to AKS Hybrid Nodes and troubleshooting](https://learn.microsoft.com/en-us/azure/aks/hybrid/troubleshoot-overview)
 7. Node Auto Repair
 8. Kubernetes Networking
    1. Flannel

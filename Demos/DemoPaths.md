@@ -26,7 +26,7 @@ This is where you can find tutorials on the demos that were in the Ignite 2022 s
    2. [PowerShell](https://docs.microsoft.com/en-us/azure-stack/aks-hci/update-akshci-host-powershell)
    3. [Offline Upgrade](https://learn.microsoft.com/en-us/azure/aks/hybrid/offline-download)
 6. [Connecting to AKS Hybrid Nodes and troubleshooting](https://learn.microsoft.com/en-us/azure/aks/hybrid/troubleshoot-overview)
-7. Node Auto Repair
+7. [Node Auto Repair](https://learn.microsoft.com/en-us/azure/aks/hybrid/node-repair)
 8. Kubernetes Networking
    1. Flannel
    2. Calico

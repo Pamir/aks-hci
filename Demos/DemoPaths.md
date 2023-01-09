@@ -31,7 +31,7 @@ This is where you can find tutorials on the demos that were in the Ignite 2022 s
    1. Flannel
    2. Calico
 9. LoadBalacing
-   1. HAProxy LoadBalancing
+   1. [HAProxy LoadBalancing](https://learn.microsoft.com/en-us/azure/aks/hybrid/configure-load-balancer)
    2. MetaLB LoadBalancing
    3. Packet Tracing
 10. Storge

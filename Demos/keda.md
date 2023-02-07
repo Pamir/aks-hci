@@ -1,6 +1,7 @@
 ### Kubernetes-based Event-Driven Autoscaling (KEDA)
 KEDA is an open source component that allows for event-driven scaling of containerized applications in Kubernetes. It provides automatic scaling for event-driven workloads, such as Apache Kafka and RabbitMQ, on-demand, based on events and metrics.
 
+
 #### Installation
 To install KEDA in your Kubernetes cluster, use the following command:
 
@@ -55,6 +56,33 @@ spec:
 ```
 ### Deploying KEDA in Production
 KEDA is production-ready and is being used by several organizations to scale their event-driven applications in Kubernetes. It is recommended to use KEDA in conjunction with a Kubernetes cluster, such as AKS or GKE, for increased reliability and ease of use.
+
+#### Notes
+Scaling by based on native CPU and Memory metrics of AKS Hybrid, Metrics Server should be deployed on workload cluster.
+Kubernetes Metrics Server is a cluster-wide aggregator of resource usage data in a Kubernetes cluster. It provides API endpoints to query the metrics, allowing Kubernetes components and users to monitor and troubleshoot the performance and resource utilization of the cluster and its workloads.
+
+For full installation process please refer to https://kubernetes-sigs.github.io/metrics-server/
+```bash
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+```
+
+```yaml
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: cpu-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: my-deployment
+  triggers:
+  - type: cpu
+    metricType: Utilization # Allowed types are 'Utilization' or 'AverageValue'
+    metadata:
+      value: "50"
+      containerName: "api"
+```
 
 ### Conclusion
 Kubernetes-based Event-Driven Autoscaling (KEDA) provides an efficient and automated way to scale containerized applications in response to events and metrics. With its simple installation and configuration process, KEDA can be easily integrated into any Kubernetes-based application and offers production-ready scaling capabilities for event-driven workloads.

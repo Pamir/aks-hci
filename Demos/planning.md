@@ -39,3 +39,17 @@
   - Prometheus based scaling
   - Keda based Scaling
   - Putting it alltogether
+- Monitoring and Logging
+  - Prometheus Operator
+    - Service Monitor CRD
+    - PrometheusRule CRD
+    - Prometheus CRD
+  - AKS Monitoring
+    - Installation
+    - Addig new components for alerting
+    - CRD Review
+  - Logging
+    - EFK Stack
+    - Azure Arc Logging
+    - What to check 
+      - Critical Logs 

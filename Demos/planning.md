@@ -1,0 +1,41 @@
+### Topics
+
+- AKS Hybrid Insallation with Proxy
+  - Checking proxy logs
+  - DNS Logging on coreDNS
+  - Plugins on management cluster
+    - prometheus
+    - Azure Arc
+    - plugin troubleshooting
+  - Alerting, the hidden gems 
+- AKS Hybrid Basic Troubleshooting
+  - Connecting with SSH
+  - api server check
+  - kms plugin check
+  - Where to check logs
+  - loadbalancer lifecycle (wssd, moc-cloud-controller-manager)
+- AKS Hybrid Upgrade, Backup and Restore
+  - Upgrade Process
+    - Prereqs before upgrading target clusters. 
+  - What should we backup
+  - What should not we backup
+  - Hidden parts in Management cluster and plugins
+  - Restoring AKS Hybrid - deep dive
+- Networking in AKS Hybrid
+  - Kubernetes Networking Deep Dive
+  - LoadBalancers
+    - HAProxy
+    - MetalLB
+    - F5/Netscaler use cases
+    - Nginx Ingress Plus
+    - static IP Addresses, why we need it, where we need it
+  - Ingress Conttollers and Best Practices
+  - Performance Tests on Ingress Controllers
+- Scaling on AKS Hybrid
+  - Vertical Scaling NodePools
+  - Manual Scaling NodePools
+  - Metric Server
+  - HPA
+  - Prometheus based scaling
+  - Keda based Scaling
+  - Putting it alltogether

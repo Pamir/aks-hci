@@ -75,9 +75,9 @@ nginx-ingrss-ingress-nginx-controller-admission   ClusterIP      10.109.232.48  
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      more_set_headers "X-Forwarded-For $http_x_forwarded_for";
+  kubernetes.io/ingress.class: nginx
+  nginx.ingress.kubernetes.io/configuration-snippet: |
+    more_set_headers "X-Forwarded-For $http_x_forwarded_for";
     nginx.ingress.kubernetes.io/rewrite-target: /
   name: minimal-ingress
   namespace: default

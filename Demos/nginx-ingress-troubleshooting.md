@@ -1,6 +1,6 @@
 ### Ingress Troubleshooting of X-Forwarded-For Header on AKS Hybrid
 ### Overview
-"By default NGINX uses the content of the header X-Forwarded-For as the source of truth to get information about the client IP address. This works without issues in L7 if we configure the setting proxy-real-ip-cidr with the correct information of the IP/network address of trusted external load balancer." - (Nginx Ingress Docs)[https://kubernetes.github.io/ingress-nginx/user-guide/miscellaneous/#source-ip-address].
+"By default NGINX uses the content of the header X-Forwarded-For as the source of truth to get information about the client IP address. This works without issues in L7 if we configure the setting proxy-real-ip-cidr with the correct information of the IP/network address of trusted external load balancer." - [Nginx Ingress Docs](https://kubernetes.github.io/ingress-nginx/user-guide/miscellaneous/#source-ip-address).
 In this document you will find step by step troubleshooting X-Forwarded-For if these configrations in the link above are missing  
 ### What is Ingress Controller
 Kubernetes Ingress is a resource object in the Kubernetes API that provides a way to manage external access to services within a Kubernetes cluster. In essence, Ingress is a layer of abstraction that allows you to route traffic to different services based on the URL path or host. It provides a way to expose HTTP and HTTPS routes from outside the cluster to services within the cluster.

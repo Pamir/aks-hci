@@ -41,11 +41,17 @@ In summary, the ServiceMonitor object is a key component of the Prometheus Opera
 
 Grafana, a popular open-source visualization tool, by default. When you install the [Prometheus Operator](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) from the official Helm chart repository, Grafana is automatically deployed along with Prometheus, and you can use it to create custom dashboards and visualizations based on the metrics collected by Prometheus.
 
+After configuration of ServiceMonitor object, from prometheus ui, it should be seen that Service Discovery for nginx is like in snapshot below.
+![servicemonitor in prometheus](./ingress-controller/production-grade-nginx-ingress-controller/servicemonitorinprometheus.png)
+
 However, if you are using the AKS Hybrid Monitoring solution from [AKS Hybrid Monitoring](https://learn.microsoft.com/en-us/azure/aks/hybrid/monitor-logging) to deploy the Prometheus Operator, you will need to install Grafana separately. This is because AKS Hybrid Monitoring is a custom implementation of the Prometheus Operator that is optimized for use with AKS Hybrid, and it does not include Grafana by default.
 
 To install Grafana in this scenario, you can use the Grafana Helm chart and configure it to connect to the Prometheus instance deployed by the Prometheus Operator. This will enable you to visualize and analyze the Kubernetes metrics collected by Prometheus, and gain valuable insights into the performance and health of your cluster.
 
-To visualize [nginx ingress controller metrics](https://grafana.com/grafana/dashboards/9614-nginx-ingress-controller/), we need deploy as a configmap in order to make grafana load as a dashboard
+To visualize [nginx ingress controller metrics](https://grafana.com/grafana/dashboards/9614-nginx-ingress-controller/), we need deploy as a [configmap](https://github.com/Pamir/kubernetes-essentials/tree/master/10-monitoring/nginx-ingress) in order to make grafana load as a dashboard
+
+After configuration of grafana configmap, from Grafana, it should be seen that dashboard for nginx should is likein the snapshot below.
+![Nginx PrometheusRule  Prometheus UI](./ingress-controller/production-grade-nginx-ingress-controller/nginx-ingress-grafana-dashboard.png)
 
 PrometheusAlert Manager is a component of Prometheus, an open-source monitoring and alerting system that is widely used in Kubernetes environments. It enables the system to monitor and alert administrators to potential issues with the Nginx Ingress Controller and other workloads running in the Kubernetes cluster.
 
@@ -58,7 +64,8 @@ For example, you can use PrometheusRule to define alerting rules for the Nginx I
 
 ![Nginx PrometheusRule](./ingress-controller/production-grade-nginx-ingress-controller/prometheusrule.png)
 
-
+After configuration of PrometheusRule object, from prometheus ui, it should be seen that Rules for nginx is like in the snapshot below.
+![Nginx PrometheusRule  Promettheus UI](./ingress-controller/production-grade-nginx-ingress-controller/prometheusruleoutput.png)
 
 
 #### Nginx Ingress Controller Memory Request,Limit  and Cpu Request

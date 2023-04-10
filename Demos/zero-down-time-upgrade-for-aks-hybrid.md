@@ -38,11 +38,7 @@ Before beginning the upgrade process, it's crucial to prepare your cluster by ad
    
    e. **PodDisruptionBudget** is a configuration that allows you to specify the minimum number of available replicas your application should maintain during voluntary disruptions, such as node upgrades or maintenance. By defining a PDB, you can prevent Kubernetes from evicting too many pods at once, which would cause downtime or reduced performance. PDBs help maintain high availability and ensure that your applications remain resilient during upgrades and other planned disruptions.Configure a PodDisruptionBudget (PDB) for your applications to limit the number of concurrently disrupted pods during the upgrade process, ensuring high availability.
 
-## 2. Upgrading the AKS Hybrid Cluster
-
-Upgrade your AKS Hybrid cluster following the [official AKS Hybrid upgrade documentation](https://learn.microsoft.com/en-us/azure/aks/hybrid/upgrade). The upgrade process in AKS Hybrid is designed to be automated, handling tasks such as cordoning and draining nodes without manual intervention.
-
-## 3. Configuring Probes, Shutdown Hooks, nodeAntiAffinity, and PodDisruptionBudget
+## 2. Configuring Probes, Shutdown Hooks, nodeAntiAffinity, and PodDisruptionBudget
 
 To ensure that your applications remain healthy and available during the upgrade process, configure liveness, readiness, and startup probes, as well as a pre-shutdown hook for graceful pod termination. Additionally, set up a PodDisruptionBudget to maintain high availability.
 
@@ -167,3 +163,7 @@ namespace GracefulShutdownExample
 By handling shutdown signals within your applications, you can ensure that they gracefully terminate during the Kubernetes upgrade process, further enhancing the zero downtime experience.
 
 By using these configurations and handling shutdown signals within your applications, you can ensure that your applications remain available and healthy throughout the upgrade process, achieving zero downtime Kubernetes upgrades in an AKS Hybrid environment on Azure Stack HCI.
+
+## 3. Upgrading the AKS Hybrid Cluster
+
+Upgrade your AKS Hybrid cluster following the [official AKS Hybrid upgrade documentation](https://learn.microsoft.com/en-us/azure/aks/hybrid/upgrade). The upgrade process in AKS Hybrid is designed to be automated, handling tasks such as cordoning and draining nodes without manual intervention.

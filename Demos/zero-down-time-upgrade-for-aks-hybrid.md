@@ -1,4 +1,4 @@
-# Achieving Zero Downtime Kubernetes Upgrades in AKS Hybrid on Stack HCI with Probes, PodDisruptionBudget,kube-not-trouble,Popeye, Deprecations Plugin
+# Achieving Zero Downtime Kubernetes Upgrades in AKS Hybrid on Stack HCI with Probes, PodDisruptionBudget,kube-no-trouble,Popeye, Deprecations Plugin
 
 ## Introduction
 

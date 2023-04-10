@@ -1,4 +1,4 @@
-# Achieving Zero Downtime Kubernetes Upgrades in AKS Hybrid on Stack HCI with Probes, PodDisruptionBudget, and Deprecations Plugin
+# Achieving Zero Downtime Kubernetes Upgrades in AKS Hybrid on Stack HCI with Probes, PodDisruptionBudget,kube-not-trouble,Popeye, Deprecations Plugin
 
 ## Introduction
 
@@ -18,17 +18,29 @@ Before beginning the upgrade process, it's crucial to prepare your cluster by ad
   ```bash
   kubectl deprecations --help
   ```
+  ![kubedep](./zero-downtime-upgrade/kubedep.png)
+   b.  kube-no-trouble, also known as kubent, is a command-line utility designed to facilitate the identification of deprecated Kubernetes API versions and resource configurations within a cluster. This tool proves particularly valuable when preparing for a Kubernetes upgrade, as it enables users to verify the compatibility of their resources with the updated version prior to initiating the upgrade process.Kube-no-trouble conducts a comprehensive scan of the Kubernetes cluster, examining resources delineated in manifests, Helm charts, or Kustomize directories. Subsequently, it generates a report highlighting any deprecated APIs or configurations discovered during the scan. Utilizing this report, users can update their resources to align with the most recent supported APIs and configurations, thereby ensuring a seamless upgrade experience. By employing kube-no-trouble, users can proactively detect and address potential complications before they manifest as disruptions to their applications. This helps to maintain stability and availability throughout the upgrade process. The kube-no-trouble GitHub repository can be accessed here: https://github.com/doitintl/kube-no-trouble.
+
+   In the following illustration, it becomes evident that the CronJob API version is outdated, potentially resulting in complications following an upgrade. The API version ought to be updated from `batch/v1beta1` to `batch/v1` to ensure compatibility and prevent potential issues after upgrading the Kubernetes cluster.
+
+  ![kubent Output](./zero-downtime-upgrade/kubent.png)
+ 
+   c. Kubernetes Popeye, often referred to as simply Popeye, is an open-source, command-line utility designed to systematically analyze a Kubernetes cluster to identify potential issues and offer recommendations based on best practices. The primary objective of Popeye is to aid users in optimizing their cluster's performance, maintainability, and security.Popeye examines the live state of a cluster by connecting to the Kubernetes API, subsequently evaluating the configuration of various resources such as deployments, services, and pods. Upon completion of this analysis, it generates a comprehensive report highlighting areas in need of improvement. These may include unused or under-utilized resources, misconfigurations, and security vulnerabilities. By employing Popeye, users can gain valuable insights into their Kubernetes cluster's health, allowing them to identify areas for optimization. This, in turn, ensures that their cluster remains performant, maintainable, and secure.
+   The Popeye GitHub repository can be accessed via the following link: https://github.com/derailed/popeye.
+
+  ![Popeye Output](./zero-downtime-upgrade/popeye.png)
+
   
-   b. Review your application deployments to ensure that they use appropriate liveness, readiness, and startup probes for each container.
+   d. Review your application deployments to ensure that they use appropriate liveness, readiness, and startup probes for each container.
    - **Liveness Probe:** The liveness probe checks if your container is running and functioning correctly. If the liveness probe fails, Kubernetes will restart the container. Liveness probes help to ensure that unresponsive or deadlocked containers are automatically recovered. You can configure liveness probes using HTTP GET, TCP socket, or executing a command within the container.
    - **Readiness Probe:** The readiness probe determines if your container is ready to accept incoming traffic. If a container's readiness probe fails, the container will be removed from the load balancer's list of available endpoints until it passes the readiness check again. This ensures that only healthy containers receive traffic, improving overall application stability. Readiness probes can also be configured using HTTP GET, TCP socket, or executing a command within the container.
    - **Startup Probe:** The startup probe verifies that your container has started successfully and is ready to accept traffic. Startup probes are useful for applications with slow startup times, as they prevent Kubernetes from prematurely killing containers that might just be taking longer to start. Like liveness and readiness probes, startup probes can be configured using HTTP GET, TCP socket, or executing a command within the container.
    
-   c. **PodDisruptionBudget** is a configuration that allows you to specify the minimum number of available replicas your application should maintain during voluntary disruptions, such as node upgrades or maintenance. By defining a PDB, you can prevent Kubernetes from evicting too many pods at once, which would cause downtime or reduced performance. PDBs help maintain high availability and ensure that your applications remain resilient during upgrades and other planned disruptions.Configure a PodDisruptionBudget (PDB) for your applications to limit the number of concurrently disrupted pods during the upgrade process, ensuring high availability.
+   e. **PodDisruptionBudget** is a configuration that allows you to specify the minimum number of available replicas your application should maintain during voluntary disruptions, such as node upgrades or maintenance. By defining a PDB, you can prevent Kubernetes from evicting too many pods at once, which would cause downtime or reduced performance. PDBs help maintain high availability and ensure that your applications remain resilient during upgrades and other planned disruptions.Configure a PodDisruptionBudget (PDB) for your applications to limit the number of concurrently disrupted pods during the upgrade process, ensuring high availability.
 
 ## 2. Upgrading the AKS Hybrid Cluster
 
-Upgrade your AKS Hybrid cluster following the [official AKS Hybrid upgrade documentation](https://docs.microsoft.com/en-us/azure-stack/aks-hci/concepts-upgrade). The upgrade process in AKS Hybrid is designed to be automated, handling tasks such as cordoning and draining nodes without manual intervention.
+Upgrade your AKS Hybrid cluster following the [official AKS Hybrid upgrade documentation](https://learn.microsoft.com/en-us/azure/aks/hybrid/upgrade). The upgrade process in AKS Hybrid is designed to be automated, handling tasks such as cordoning and draining nodes without manual intervention.
 
 ## 3. Configuring Probes, Shutdown Hooks, nodeAntiAffinity, and PodDisruptionBudget
 
@@ -42,56 +54,69 @@ Example YAML file with probes, a pre-shutdown hook, and a PodDisruptionBudget:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sample-deployment
+  name: nginx-deployment
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: sample-app
+      app: nginx
   template:
     metadata:
       labels:
-        app: sample-app
+        app: nginx
     spec:
       containers:
-      - name: sample-container
-        image: sample-image
+      - name: nginx
+        image: nginx:1.21
         ports:
-        - containerPort: 8080
+        - containerPort: 80
         livenessProbe:
           httpGet:
-            path: /healthz
-            port: 8080
-          initialDelaySeconds: 15
-          periodSeconds: 10
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
         readinessProbe:
           httpGet:
-            path: /ready
-            port: 8080
+            path: /
+            port: 80
           initialDelaySeconds: 5
           periodSeconds: 5
         startupProbe:
           httpGet:
-            path: /startup
-            port: 8080
-          initialDelaySeconds: 10
-          periodSeconds: 5
+            path: /
+            port: 80
           failureThreshold: 30
+          periodSeconds: 10
         lifecycle:
           preStop:
             exec:
-              command: ["sh", "-c", "echo 'Gracefully shutting down...'; sleep 10"]
+              command: ["sh", "-c", "nginx -s quit; sleep 10"]
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - nginx
+              topologyKey: kubernetes.io/hostname
+
 ---
 
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  name: sample-pdb
+  name: nginx-pdb
 spec:
   minAvailable: 2
   selector:
     matchLabels:
-      app: sample-app
+      app: nginx
+
 ```
 within Java and .NET Core Applications
 

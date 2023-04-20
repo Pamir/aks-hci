@@ -77,5 +77,125 @@ Additionally, there's one more parameter to consider: updating the lbagent certi
 Update-AksHciClusterCertificates -Name holidays -fixCloudCredentials -patchLoadBalancer
 ```
 
+When everything is functioning smoothly, there's usually no need to troubleshoot your environment. However, you might wonder how to determine if your cluster is partially functioning in terms of load balancers. To check this, connect to your active LoadBalancer VM using SSH, ensure that every daemon is working properly, and verify that every VIP address associated with the LoadBalancer VM is present in the haproxy.cfg file. If one of your VIPs or the latest one is missing, it's likely that you forgot to use the -patchLoadBalancer flag while updating your certificates in your target cluster.
+
+```bash
+root [ /etc/lbagent/pki ]# systemctl status lbagent
+* lbagent.service - AzEdge lbagent service
+     Loaded: loaded (/usr/lib/systemd/system/lbagent.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2023-04-19 15:33:06 UTC; 24h ago
+   Main PID: 974 (lbagent)
+      Tasks: 8 (limit: 6792)
+     Memory: 35.7M
+     CGroup: /system.slice/lbagent.service
+             `-974 /usr/bin/lbagent
+
+Apr 20 12:29:32 moc-l6g08md6vs4 lbagent[974]: [SPAN_END: 04-20 12:29:0000032 TraceID: 276590dc32184e17063935d312abacd5] Name: Received gRPC call for CheckHealth in healthAgentServer  Duration: 3600.00s
+Apr 20 13:29:32 moc-l6g08md6vs4 lbagent[974]: [SPAN_START: 04-20 12:29:0000032 TraceID: cc80ffdc3e3f156f5dbac108cc5acb48] Name: Received gRPC call for CheckHealth in healthAgentServer  SpanID: 63663863363662633730373033373061  ParentSpanID: 30303030303030303030303030303030  Duration: 3600.00s
+Apr 20 13:29:32 moc-l6g08md6vs4 lbagent[974]: [LOG: 04-20 12:29:0000032 TraceID: health.go:48  cc80ffdc3e3f156f5dbac108cc5acb48] [HealthAgent] [CheckHealth] - [timeoutSeconds:3600 ] []
+Apr 20 13:29:32 moc-l6g08md6vs4 lbagent[974]: [SPAN_END: 04-20 13:29:0000032 TraceID: cc80ffdc3e3f156f5dbac108cc5acb48] Name: Received gRPC call for CheckHealth in healthAgentServer  Duration: 3600.00s
+Apr 20 14:29:32 moc-l6g08md6vs4 lbagent[974]: [SPAN_START: 04-20 13:29:0000032 TraceID: c053345094b2081b879836aa77c5b870] Name: Received gRPC call for CheckHealth in healthAgentServer  SpanID: 38343838373433613332316533623638  ParentSpanID: 30303030303030303030303030303030  Duration: 3600.00s
+Apr 20 14:29:32 moc-l6g08md6vs4 lbagent[974]: [LOG: 04-20 13:29:0000032 TraceID: health.go:48  c053345094b2081b879836aa77c5b870] [HealthAgent] [CheckHealth] - [timeoutSeconds:3600 ] []
+Apr 20 14:29:32 moc-l6g08md6vs4 lbagent[974]: [SPAN_END: 04-20 14:29:0000032 TraceID: c053345094b2081b879836aa77c5b870] Name: Received gRPC call for CheckHealth in healthAgentServer  Duration: 3600.00s
+Apr 20 15:29:32 moc-l6g08md6vs4 lbagent[974]: [SPAN_START: 04-20 14:29:0000032 TraceID: 990cd30b2956d802eef70a8e6db2791e] Name: Received gRPC call for CheckHealth in healthAgentServer  SpanID: 33393834383262386633636233656336  ParentSpanID: 30303030303030303030303030303030  Duration: 3600.00s
+Apr 20 15:29:32 moc-l6g08md6vs4 lbagent[974]: [LOG: 04-20 14:29:0000032 TraceID: health.go:48  990cd30b2956d802eef70a8e6db2791e] [HealthAgent] [CheckHealth] - [timeoutSeconds:3600 ] []
+Apr 20 15:29:32 moc-l6g08md6vs4 lbagent[974]: [SPAN_END: 04-20 15:29:0000032 TraceID: 990cd30b2956d802eef70a8e6db2791e] Name: Received gRPC call for CheckHealth in healthAgentServer  Duration: 3600.00s
+root [ /etc/lbagent/pki ]# systemctl status haproxy
+* haproxy.service - HAProxy Load Balancer
+     Loaded: loaded (/usr/lib/systemd/system/haproxy.service; disabled; vendor preset: enabled)
+     Active: active (running) since Wed 2023-04-19 15:33:22 UTC; 24h ago
+    Process: 1010 ExecStartPre=/usr/sbin/haproxy -Ws -f $CONFIG -c -q $EXTRAOPTS (code=exited, status=0/SUCCESS)
+    Process: 169283 ExecReload=/usr/sbin/haproxy -Ws -f $CONFIG -c -q $EXTRAOPTS (code=exited, status=0/SUCCESS)
+    Process: 169285 ExecReload=/bin/kill -USR2 $MAINPID (code=exited, status=0/SUCCESS)
+   Main PID: 1013 (haproxy)
+      Tasks: 5 (limit: 6792)
+     Memory: 17.8M
+     CGroup: /system.slice/haproxy.service
+             |-  1013 /usr/sbin/haproxy -sf 169274 -Ws -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid -S /var/run/haproxy-master.sock
+             `-169287 /usr/sbin/haproxy -sf 169274 -Ws -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid -S /var/run/haproxy-master.sock
+
+Apr 20 15:37:53 moc-l6g08md6vs4 haproxy[169287]: 192.168.0.3:21923 [20/Apr/2023:15:37:53.217] frontend_192.168.0.156_6443 backend_192.168.0.156_6443/tcp0 1/0/162 4909 -- 12/12/11/11/0 0/0
+Apr 20 15:37:53 moc-l6g08md6vs4 haproxy[169287]: 192.168.0.3:18682 [20/Apr/2023:15:37:53.070] frontend_192.168.0.156_6443 backend_192.168.0.156_6443/tcp0 1/0/325 5190 -- 11/11/10/10/0 0/0
+Apr 20 15:37:55 moc-l6g08md6vs4 haproxy[169287]: 192.168.0.3:26730 [20/Apr/2023:15:37:55.385] frontend_192.168.0.156_6443 backend_192.168.0.156_6443/tcp0 1/0/119 4822 -- 12/12/11/11/0 0/0
+Apr 20 15:37:55 moc-l6g08md6vs4 haproxy[169287]: 192.168.0.3:55497 [20/Apr/2023:15:37:55.274] frontend_192.168.0.156_6443 backend_192.168.0.156_6443/tcp0 1/1/240 5309 -- 11/11/10/10/0 0/0
+Apr 20 15:39:24 moc-l6g08md6vs4 haproxy[169287]: 192.168.0.3:42949 [20/Apr/2023:15:37:50.593] frontend_192.168.0.156_6443 backend_192.168.0.156_6443/tcp0 1/0/93539 120606 -- 10/10/9/9/0 0/0
+Apr 20 15:44:01 moc-l6g08md6vs4 haproxy[169287]: 192.168.0.3:43624 [20/Apr/2023:15:44:00.934] frontend_192.168.0.156_6443 backend_192.168.0.156_6443/tcp0 1/0/829 4879 -- 12/12/11/11/0 0/0
+Apr 20 15:44:01 moc-l6g08md6vs4 haproxy[169287]: 192.168.0.3:3424 [20/Apr/2023:15:44:00.717] frontend_192.168.0.156_6443 backend_192.168.0.156_6443/tcp0 1/0/1060 5242 -- 11/11/10/10/0 0/0
+Apr 20 15:44:04 moc-l6g08md6vs4 haproxy[169287]: 192.168.0.3:48683 [20/Apr/2023:15:44:03.951] frontend_192.168.0.156_6443 backend_192.168.0.156_6443/tcp0 1/0/90 4844 -- 12/12/11/11/0 0/0
+Apr 20 15:44:04 moc-l6g08md6vs4 haproxy[169287]: 192.168.0.3:43131 [20/Apr/2023:15:44:03.826] frontend_192.168.0.156_6443 backend_192.168.0.156_6443/tcp0 1/0/220 5226 -- 11/11/10/10/0 0/0
+Apr 20 15:46:30 moc-l6g08md6vs4 haproxy[169287]: 192.168.0.3:5277 [20/Apr/2023:15:40:41.000] frontend_192.168.0.156_6443 backend_192.168.0.156_6443/tcp0 1/1/349241 8867405 -- 10/10/9/9/0 0/0
+root [ /etc/lbagent/pki ]# systemctl status keepalived
+* keepalived.service - LVS and VRRP High Availability Monitor
+     Loaded: loaded (/usr/lib/systemd/system/keepalived.service; disabled; vendor preset: enabled)
+     Active: active (running) since Thu 2023-04-20 15:26:38 UTC; 21min ago
+    Process: 170981 ExecStart=/usr/sbin/keepalived $KEEPALIVED_OPTIONS (code=exited, status=0/SUCCESS)
+   Main PID: 170982 (keepalived)
+      Tasks: 2 (limit: 6792)
+     Memory: 1.2M
+     CGroup: /system.slice/keepalived.service
+             |-170982 /usr/sbin/keepalived -D
+             `-170983 /usr/sbin/keepalived -D
+
+Apr 20 15:26:46 moc-l6g08md6vs4 Keepalived_vrrp[170983]: (VI_1) Sending/queueing gratuitous ARPs on eth0 for 192.168.0.157
+Apr 20 15:26:46 moc-l6g08md6vs4 Keepalived_vrrp[170983]: Sending gratuitous ARP on eth0 for 192.168.0.157
+Apr 20 15:26:46 moc-l6g08md6vs4 Keepalived_vrrp[170983]: Sending gratuitous ARP on eth0 for 192.168.0.156
+Apr 20 15:26:46 moc-l6g08md6vs4 Keepalived_vrrp[170983]: Sending gratuitous ARP on eth0 for 192.168.0.157
+Apr 20 15:26:46 moc-l6g08md6vs4 Keepalived_vrrp[170983]: Sending gratuitous ARP on eth0 for 192.168.0.156
+Apr 20 15:26:46 moc-l6g08md6vs4 Keepalived_vrrp[170983]: Sending gratuitous ARP on eth0 for 192.168.0.157
+Apr 20 15:26:46 moc-l6g08md6vs4 Keepalived_vrrp[170983]: Sending gratuitous ARP on eth0 for 192.168.0.156
+Apr 20 15:26:46 moc-l6g08md6vs4 Keepalived_vrrp[170983]: Sending gratuitous ARP on eth0 for 192.168.0.157
+Apr 20 15:26:46 moc-l6g08md6vs4 Keepalived_vrrp[170983]: Sending gratuitous ARP on eth0 for 192.168.0.156
+Apr 20 15:26:46 moc-l6g08md6vs4 Keepalived_vrrp[170983]: Sending gratuitous ARP on eth0 for 192.168.0.157
+
+root [ /etc/lbagent/pki ]# cat /etc/haproxy/haproxy.cfg
+global
+    log /dev/log local0 info
+    stats socket /var/run/haproxy.sock mode 666 level admin
+    stats timeout 2m
+
+defaults
+    timeout client 30s
+    timeout connect 10s
+    timeout server 30s
+    timeout tunnel 24d
+    timeout client-fin 30s
+    log global
+    option tcplog
+    option log-separate-errors
+    option log-health-checks
+    maxconn 10000
+
+
+frontend frontend_192.168.0.156_6443
+    bind 192.168.0.156:6443
+    mode tcp
+    default_backend backend_192.168.0.156_6443
+
+backend backend_192.168.0.156_6443
+    mode tcp
+    balance roundrobin
+    server tcp0 192.168.0.18:6443 check
+
+frontend frontend_192.168.0.157_80
+    bind 192.168.0.157:80
+    mode tcp
+    default_backend backend_192.168.0.157_80
+
+backend backend_192.168.0.157_80
+    mode tcp
+    balance roundrobin
+    server tcp0 192.168.0.16:30942 check
+    server tcp1 192.168.0.21:30942 check
+    server tcp2 192.168.0.18:30942 check
+```
+
+to check validity of your load balancer certificates on the directory /etc/lbagent/pki
+```bash
+root [ /etc/lbagent/pki ]# openssl x509 -enddate -noout -in cloudagent.crt
+notAfter=Feb  5 21:19:44 2024 GMT
+```
+
+If everything is working fine do not forget to sniff your network :)
+
 !!  Happy troubleshooting !!!
 

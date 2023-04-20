@@ -189,7 +189,7 @@ backend backend_192.168.0.157_80
     server tcp2 192.168.0.18:30942 check
 ```
 
-to check validity of your load balancer certificates on the directory /etc/lbagent/pki
+To check the validity of your load balancer certificates located in the /etc/lbagent/pki directory.
 ```bash
 root [ /etc/lbagent/pki ]# openssl x509 -enddate -noout -in cloudagent.crt
 notAfter=Feb  5 21:19:44 2024 GMT

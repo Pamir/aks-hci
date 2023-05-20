@@ -90,3 +90,29 @@ Please note, this is a high-level overview, and specific configurations may vary
 
 Adding CPU/memory limits, as well as implementing host-related denial policies or custom policies, can interfere with the functioning of the management cluster."
 
+
+### Gatekeeper Extensibility Model
+
+Rego scripts provide extensibility to Gatekeeper policy, enabling users to define their own rules and policy definitions. For instance, an example of a Gatekeeper policy in Rego script format can be found in the following GitHub repository [[2](https://github.com/sebradloff/k8s-gatekeeper-policies-example/blob/main/policies.md)]:
+
+```rego
+package namespace_team_label_02
+
+import data.lib.core
+
+policyID := "P0002"
+
+default has_team_label = false
+
+has_team_label { 
+  core.has_field (core.labels, "team") 
+}
+
+violation [msg] { 
+  not has_team_label
+  msg := core.format_with_id (
+    sprintf("%s: Namespace does not have a required 'team' label", [core.name]), policyID
+  )
+}
+
+

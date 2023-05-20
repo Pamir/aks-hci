@@ -114,5 +114,11 @@ violation [msg] {
     sprintf("%s: Namespace does not have a required 'team' label", [core.name]), policyID
   )
 }
+```
+Compared to using OPA with its sidecar kube-mgmt (aka Gatekeeper v1.0), Gatekeeper introduces the following functionality: An extensible, parameterized policy library. Native Kubernetes CRDs for instantiating the policy library (aka "constraints"). Native Kubernetes CRDs for extending the policy library (aka "constraint templates") [3](https://github.com/open-policy-agent/gatekeeper).
 
+### Azure Policy and Custom Policies
+ 
+To integrate our custom policy, we must first save our Rego script to GitHub. By providing the GitHub URL in the Azure policy definition, we can deploy our custom policies to Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes. Consequently, these policies could impact the AKS Management cluster, potentially leading to unavailability.
 
+![Custom Gatekeeper Policy](./azure-policy-management-cluster.md/../management-cluster-azure-policy/06-custom-policy-definition.png)
